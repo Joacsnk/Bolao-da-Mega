@@ -1,8 +1,7 @@
 import random
 
 def gerar_cartela(numero_dezenas, numero_jogos):
-    
-    jack = jack+1
+
     lista_jogos = []
     for i in range(numero_jogos):
         numeros = []
