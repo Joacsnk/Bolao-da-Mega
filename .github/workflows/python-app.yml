@@ -1,33 +1,37 @@
-name: Python CI - Gerador de Jogos
+name: Python Check
 
+# 1. Quando o robô deve trabalhar?
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
+# 2. O que o robô deve fazer?
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest # O sistema operacional da máquina virtual
 
     steps:
-    - name: Checkout do código
+    - name: Baixar o código do repositório
       uses: actions/checkout@v4
 
-    - name: Configurar Python
+    - name: Configurar o Python
       uses: actions/setup-python@v4
       with:
         python-version: "3.10"
 
     - name: Instalar dependências
       run: |
-        pip install pytest flake8
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: Analisar estilo do código (Linting)
+    - name: Verificar erros de linting (Flake8)
       run: |
-        # Verifica se há erros de sintaxe
+        # Para o build se houver erros de sintaxe Python ou símbolos indefinidos
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-    - name: Executar Testes Unitários
+    - name: Rodar Testes (Pytest)
       run: |
-        pytest test_sorteio.py
+        pytest
